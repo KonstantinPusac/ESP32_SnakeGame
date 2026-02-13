@@ -7,6 +7,7 @@
 #include "MainMenu.h"
 #include "GameScreen.h"
 #include "SettingsScreen.h"
+#include "StatsScreen.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -26,6 +27,7 @@ private slots:
     void showMenu();
     void showGameScreen();
     void showSettingsScreen();
+    void showStatsScreen();
 
 private:
     Ui::MainSnake *ui;
@@ -34,5 +36,6 @@ private:
     MainMenu *m_mainMenu;
     GameScreen *m_gameScreen;
     SettingsScreen *m_settingsScreen;
+    StatsScreen *m_statsScreen;
 };
 #endif // MAINSNAKE_H

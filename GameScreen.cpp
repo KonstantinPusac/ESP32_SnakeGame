@@ -4,6 +4,8 @@
 #include <QHBoxLayout>
 #include <QKeyEvent>
 #include <QLabel>
+#include <QFile>
+#include <QDateTime>
 
 GameScreen::GameScreen(GameController *controller, QWidget *parent) : QWidget(parent), m_controller(controller)
 {
@@ -21,9 +23,7 @@ GameScreen::GameScreen(GameController *controller, QWidget *parent) : QWidget(pa
     setStyleSheet("background-color: #000000;");
 }
 
-GameScreen::~GameScreen()
-{
-}
+GameScreen::~GameScreen() {}
 
 void GameScreen::setupUI()
 {
@@ -138,6 +138,15 @@ void GameScreen::onGameOver(int score)
 {
     m_backBtn->setText("GAME OVER - BACK (ESC)");
     m_scoreLabel->setText(QString("Game Over! Final Score: %1").arg(score));
+
+    // Save score to .txt file with format: "Date, Time - Score: X, Length: Y, Time: Z seconds"
+    QFile file("scores.txt");
+    if (file.open(QIODevice::WriteOnly | QIODevice::Append)) {
+        QTextStream out(&file);
+        QDateTime now = QDateTime::currentDateTime();
+        out << now.toString("yyyy-MM-dd, hh:mm:ss") << " - Score: " << score << "\n";
+        file.close();
+    }
 }
 
 void GameScreen::onDirectionChanged(JoystickDirection direction)

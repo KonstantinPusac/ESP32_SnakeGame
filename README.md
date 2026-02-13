@@ -58,5 +58,3 @@ build/SnakeGame.exe
 2. **Add Game Logic** - Edit `MainSnake.cpp` to implement the Snake game
 3. **Build & Test** - Use `Ctrl+Shift+B` to build
 4. **Debug** - Press `F5` to debug with breakpoints
-
-Happy coding! 🎮

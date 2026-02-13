@@ -58,6 +58,23 @@ void MainMenu::setupUI()
     );
     connect(m_settingsBtn, &QPushButton::clicked, this, &MainMenu::settingsClicked);
     layout->addWidget(m_settingsBtn);
+
+    // Stats Button
+    m_statsBtn = new QPushButton("STATS");
+    m_statsBtn->setFixedHeight(60);
+    m_statsBtn->setStyleSheet(
+        "QPushButton { "
+        "font-size: 18px; "
+        "font-weight: bold; "
+        "background-color: #000000; "
+        "color: white; "
+        "border: none; "
+        "border-radius: 5px; "
+        "} "
+        "QPushButton:hover { background-color: #ff7b00; } "
+    );
+    connect(m_statsBtn, &QPushButton::clicked, this, &MainMenu::statsClicked);
+    layout->addWidget(m_statsBtn);
     
     // Exit Button
     m_exitBtn = new QPushButton("EXIT");

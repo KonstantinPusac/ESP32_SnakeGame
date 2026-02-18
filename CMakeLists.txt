@@ -21,6 +21,8 @@ qt_add_executable(SnakeGame
     GameScreen.h
     SettingsScreen.cpp
     SettingsScreen.h
+    StatsScreen.cpp
+    StatsScreen.h
 )
 
 target_link_libraries(SnakeGame

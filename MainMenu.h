@@ -14,6 +14,7 @@ public:
 signals:
     void playClicked();
     void settingsClicked();
+    void statsClicked();
     void exitClicked();
 
 private:
@@ -21,6 +22,7 @@ private:
 
     QPushButton *m_playBtn;
     QPushButton *m_settingsBtn;
+    QPushButton *m_statsBtn;
     QPushButton *m_exitBtn;
 };
 

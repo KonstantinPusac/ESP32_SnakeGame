@@ -3,8 +3,7 @@
 #include <QHBoxLayout>
 #include <QSettings>
 
-SettingsScreen::SettingsScreen(QWidget *parent)
-    : QWidget(parent)
+SettingsScreen::SettingsScreen(QWidget *parent) : QWidget(parent)
 {
     setupUI();
     loadSettings();

@@ -16,19 +16,23 @@ MainSnake::MainSnake(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainSnak
     m_mainMenu = new MainMenu(this);
     m_gameScreen = new GameScreen(m_controller, this);
     m_settingsScreen = new SettingsScreen(this);
+    m_statsScreen = new StatsScreen(this);
     
     // Add screens to stacked widget
     m_stackedWidget->addWidget(m_mainMenu);
     m_stackedWidget->addWidget(m_gameScreen);
     m_stackedWidget->addWidget(m_settingsScreen);
+    m_stackedWidget->addWidget(m_statsScreen);
     
     // Connect signals
     connect(m_mainMenu, &MainMenu::playClicked, this, &MainSnake::showGameScreen);
     connect(m_mainMenu, &MainMenu::settingsClicked, this, &MainSnake::showSettingsScreen);
+    connect(m_mainMenu, &MainMenu::statsClicked, this, &MainSnake::showStatsScreen);
     connect(m_mainMenu, &MainMenu::exitClicked, this, &QMainWindow::close);
     
     connect(m_gameScreen, &GameScreen::backToMenu, this, &MainSnake::showMenu);
     connect(m_settingsScreen, &SettingsScreen::backToMenu, this, &MainSnake::showMenu);
+    connect(m_statsScreen, &StatsScreen::backToMenu, this, &MainSnake::showMenu);
     
     // Set window properties
     setWindowTitle("Snake Game - ESP32");
@@ -58,4 +62,9 @@ void MainSnake::showGameScreen()
 void MainSnake::showSettingsScreen()
 {
     m_stackedWidget->setCurrentWidget(m_settingsScreen);
+}
+
+void MainSnake::showStatsScreen()
+{
+    m_stackedWidget->setCurrentWidget(m_statsScreen);
 }

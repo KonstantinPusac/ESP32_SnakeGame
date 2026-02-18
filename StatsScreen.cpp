@@ -4,6 +4,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QShowEvent>
+#include <algorithm>
 
 StatsScreen::StatsScreen(QWidget *parent) : QWidget(parent), m_layout(nullptr)
 {
@@ -54,22 +55,46 @@ void StatsScreen::refreshScores()
         delete item->widget();
         m_layout->removeItem(item);
     }
-    
+
     // Read and display scores from scores.txt
     QFile file("scores.txt");
-    if (file.open(QIODevice::ReadOnly)) {
+    if (file.open(QIODevice::ReadOnly)) 
+    {
         QTextStream in(&file);
         QString line;
         int insertPosition = 1; // After title
+
+        // Sort scores.txt based on score
+        QStringList scores;
+        while (in.readLineInto(&line)) 
+        {
+            scores.append(line);
+        }
+        std::sort(scores.begin(), scores.end(), std::greater<QString>());
+
+        QTextStream out(&file);
+        file.close();
+        file.open(QIODevice::WriteOnly);
+        for (const QString &score : scores) {
+            out << score << "\n";
+        }
+        file.close();
         
-        while (in.readLineInto(&line)) {
+        // Re-read and display sorted scores
+        file.open(QIODevice::ReadOnly);
+        in.setDevice(&file);
+        
+        while (in.readLineInto(&line)) 
+        {
             QLabel *scoreLabel = new QLabel(line);
             scoreLabel->setStyleSheet("font-size: 18px; color: #000000; font-weight: bold;");
             m_layout->insertWidget(insertPosition, scoreLabel);
             insertPosition++;
         }
         file.close();
-    } else {
+    } 
+    else 
+    {
         QLabel *noScoresLabel = new QLabel("No scores available.");
         noScoresLabel->setStyleSheet("font-size: 18px; color: #000000; font-weight: bold;");
         m_layout->insertWidget(1, noScoresLabel);

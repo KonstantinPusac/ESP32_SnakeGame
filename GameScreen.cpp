@@ -144,7 +144,7 @@ void GameScreen::onGameOver(int score)
     if (file.open(QIODevice::WriteOnly | QIODevice::Append)) {
         QTextStream out(&file);
         QDateTime now = QDateTime::currentDateTime();
-        out << now.toString("yyyy-MM-dd, hh:mm:ss") << " - Score: " << score << "\n";
+        out << "\t" << score << "\t - \t" << now.toString("yyyy-MM-dd, hh:mm:ss") << "\n";
         file.close();
     }
 }

@@ -1,7 +1,7 @@
 # Snake Game Qt Project Documentation
 
 ## Overview
-This project is a modular Snake game written in C++ using the Qt framework. It is designed to be controlled by a joystick (simulated with keyboard for now) and is structured for easy integration with an ESP32 microcontroller.
+This project is a modular Snake game written in C++ using the Qt framework. It is designed for joystick (ESP32) or keyboard input, and is structured for easy hardware integration.
 
 ---
 
@@ -9,24 +9,27 @@ This project is a modular Snake game written in C++ using the Qt framework. It i
 
 ### 1. MainSnake (Main Window)
 - **File:** MainSnake.h / MainSnake.cpp
-- **Purpose:** Central window managing all screens (menu, game, settings).
+- **Purpose:** Central window managing all screens (menu, game, settings, stats).
 - **Key Members:**
   - `QStackedWidget *m_stackedWidget` — Holds and switches between screens.
-  - `GameController *m_controller` — Handles input (joystick/keyboard).
+  - `GameController *m_controller` — Handles input (joystick/keyboard, serial or simulated).
   - `MainMenu *m_mainMenu` — Main menu screen.
   - `GameScreen *m_gameScreen` — Gameplay screen.
   - `SettingsScreen *m_settingsScreen` — Settings screen.
+  - `StatsScreen *m_statsScreen` — Stats/score screen.
 - **Slots:**
   - `showMenu()` — Show main menu.
   - `showGameScreen()` — Show and start the game.
   - `showSettingsScreen()` — Show settings.
+  - `showStatsScreen()` — Show stats.
 
 ### 2. MainMenu
 - **File:** MainMenu.h / MainMenu.cpp
-- **Purpose:** Main menu UI with Play, Settings, Exit buttons.
+- **Purpose:** Main menu UI with Play, Settings, Stats, Exit buttons.
 - **Signals:**
   - `playClicked()`
   - `settingsClicked()`
+  - `statsClicked()`
   - `exitClicked()`
 
 ### 3. GameScreen
@@ -36,6 +39,7 @@ This project is a modular Snake game written in C++ using the Qt framework. It i
   - `startGame()` — Resets and starts the game.
   - `paintEvent()` — Draws the snake, food, and grid.
   - `keyPressEvent()` — Simulates joystick input with keyboard.
+  - `onDirectionChanged(JoystickDirection)` — Handles input from GameController.
 - **Signals:**
   - `backToMenu()`
 
@@ -47,17 +51,27 @@ This project is a modular Snake game written in C++ using the Qt framework. It i
   - `volumeChanged(int)`
   - `brightnessChanged(int)`
 
-### 5. GameController
+### 5. StatsScreen
+- **File:** StatsScreen.h / StatsScreen.cpp
+- **Purpose:** Shows previous scores and stats.
+- **Signals:**
+  - `backToMenu()`
+
+### 6. GameController
 - **File:** GameController.h / GameController.cpp
-- **Purpose:** Abstraction for joystick input (simulated with keyboard for now).
+- **Purpose:** Abstraction for joystick input (serial from ESP32, or simulated with keyboard for now).
 - **Signals:**
   - `directionChanged(JoystickDirection)`
   - `buttonPressed()`
   - `buttonReleased()`
 - **Methods:**
   - `simulateKeyPress(int key)` — For keyboard testing.
+  - `setJoystickDirection(JoystickDirection)` — Updates direction and emits signal.
+  - `setButtonPressed(bool)` — Updates button state and emits signal.
+  - Serial port is opened and read automatically on construction.
 
-### 6. SnakeGame
+### 7. SnakeGame
+
 - **File:** SnakeGame.h / SnakeGame.cpp
 - **Purpose:** Core snake game logic (movement, collision, food, score).
 - **Signals:**
@@ -69,13 +83,13 @@ This project is a modular Snake game written in C++ using the Qt framework. It i
   - `start(int gridWidth, int gridHeight, int cellSize)`
   - `moveSnake(int dx, int dy)`
   - `reset()`
-  - `generateFood()` — Now checks grid size to avoid exceptions.
+  - `generateFood()`
 
 ---
 
 ## Input Handling
-- **Joystick:** To be connected via ESP32 (future work).
-- **Keyboard:** Arrow keys simulate joystick; Space/Enter for button press.
+- **Joystick:** Connected via ESP32 (serial, COM port). Receives X/Y/button data, mapped to directions.
+- **Keyboard:** Arrow keys simulate joystick; Space for button press.
 
 ---
 
@@ -83,13 +97,14 @@ This project is a modular Snake game written in C++ using the Qt framework. It i
 1. **App starts:** Main menu is shown.
 2. **Play:** Starts the game (snake appears, food is generated).
 3. **Settings:** Adjust volume/brightness (values saved with QSettings).
-4. **Game Over:** Shown in game screen, return to menu with Back.
+4. **Stats:** View previous scores.
+5. **Game Over:** Shown in game screen, return to menu with Back.
 
 ---
 
 ## Extending for ESP32
-- Replace or extend `GameController` to read joystick/button state from ESP32 (e.g., via serial or USB).
-- Connect signals to update game state based on real hardware input.
+- GameController reads serial data from ESP32 and emits direction/button signals.
+- For custom hardware, update serial port name and parsing logic in GameController.
 
 ---
 
@@ -105,6 +120,7 @@ This project is a modular Snake game written in C++ using the Qt framework. It i
 - `MainMenu.*` — Menu UI
 - `GameScreen.*` — Gameplay UI
 - `SettingsScreen.*` — Settings UI
+- `StatsScreen.*` — Stats UI
 - `GameController.*` — Input abstraction
 - `SnakeGame.*` — Game logic
 

@@ -2,6 +2,14 @@
 #define GAMECONTROLLER_H
 
 #include <QObject>
+#include <QCoreApplication>
+#include <QSerialPort>
+#include <QSerialPortInfo>
+#include <QDebug>
+
+#define VRxPin 34 // Joystick X-axis
+#define VRyPin 35 // Joystick Y-axis
+#define SWPin 15  // Joystick button
 
 enum class JoystickDirection {
     None,
@@ -11,29 +19,44 @@ enum class JoystickDirection {
     Right
 };
 
+
 class GameController : public QObject {
     Q_OBJECT
 
 public:
-    explicit GameController(QObject *parent = nullptr);
+    GameController(QObject *parent = nullptr) : QObject(parent) 
+    {
+        connect(&serial, &QSerialPort::readyRead, this, &GameController::readData);
+        openPort();
+    }
     ~GameController();
 
-    // Joystick input methods (will be replaced with actual serial/USB input from ESP32)
+
+    // Joystick input methods
     void setJoystickDirection(JoystickDirection direction);
     void setButtonPressed(bool pressed);
 
     JoystickDirection getDirection() const { return m_direction; }
     bool isButtonPressed() const { return m_buttonPressed; }
 
-    // Simulate keyboard input for testing (before ESP32 arrives)
+    // Simulate keyboard input for testing
     void simulateKeyPress(int key);
-
+    
 signals:
     void directionChanged(JoystickDirection direction);
     void buttonPressed();
     void buttonReleased();
 
 private:
+    QSerialPort serial;
+    QByteArray buffer;
+
+    void openPort();
+    void readData();
+    void processLine(const QString &line);
+    int extractValue(const QString &line, const QString &key);
+    QString mapDirection(int x, int y);
+
     JoystickDirection m_direction = JoystickDirection::None;
     bool m_buttonPressed = false;
 };

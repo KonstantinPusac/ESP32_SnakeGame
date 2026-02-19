@@ -21,9 +21,11 @@ void SnakeGame::start(int gridWidth, int gridHeight, int cellSize)
     emit stateChanged(m_state);
     
     // Game tick based on score to increase difficulty
-    if (m_score > 50) { m_gameTimer->start(80); } 
-    else if (m_score > 100) { m_gameTimer->start(60); }
-    else { m_gameTimer->start(100); }
+    // if (m_score > 50) { m_gameTimer->start(80); } 
+    // else if (m_score > 100) { m_gameTimer->start(60); }
+    // else { m_gameTimer->start(100); }
+
+    m_gameTimer->start(150);
 }
 
 void SnakeGame::stop()

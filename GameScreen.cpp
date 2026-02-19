@@ -170,7 +170,7 @@ void GameScreen::onBackButtonClicked()
 
 void GameScreen::startGame()
 {
-    m_game->start(20, 20, m_cellSize);
+    m_game->start(50, 50, m_cellSize);
     m_scoreLabel->setText("Score: 0");
     m_backBtn->setText("BACK (ESC)");
     setFocus();
